@@ -399,12 +399,34 @@ export default function LandingPage() {
 
         {/* ── Footer ── */}
         <footer className="border-t border-border/40 py-8 text-center text-sm text-muted-foreground">
-          <div className="flex items-center justify-center gap-2">
-            <Wrench className="h-4 w-4 text-primary" />
-            <span>© {new Date().getFullYear()} FixGenie AI. All rights reserved.</span>
+          <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 px-4">
+            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
+              <div className="flex items-center gap-2">
+                <Wrench className="h-4 w-4 text-primary" />
+                <span>© {new Date().getFullYear()} FixGenie AI. All rights reserved.</span>
+              </div>
+              <span className="hidden opacity-50 sm:inline">|</span>
+              <Link href="/team" className="font-medium inline-block hover:text-primary transition-colors">
+                Team & Contributions
+              </Link>
+            </div>
+            
+            <div className="flex items-center gap-2 text-xs opacity-80">
+              <GraduationCap className="h-4 w-4 text-primary shrink-0" />
+              <span>
+                Developed as part of learning at{' '}
+                <a 
+                  href="https://www.pce.ac.in/" 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="font-medium hover:text-primary hover:underline transition-colors"
+                >
+                  Pillai College of Engineering (PCE)
+                </a>.
+              </span>
+            </div>
           </div>
         </footer>
-
       </main>
     </MotionConfig>
   );
