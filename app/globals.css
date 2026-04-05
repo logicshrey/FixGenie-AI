@@ -1,0 +1,232 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Google Font ─────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@layer base {
+  :root {
+    /* Light mode tokens */
+    --background: 220 27% 98%;
+    --foreground: 224 71% 4%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 224 71% 4%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71% 4%;
+
+    --primary: 250 87% 62%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 9% 46%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+
+    --accent: 250 87% 96%;
+    --accent-foreground: 250 87% 30%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 220 14% 90%;
+    --input: 220 14% 90%;
+    --ring: 250 87% 62%;
+
+    --radius: 0.75rem;
+    --shadow-color: 250 87% 62%;
+  }
+
+  .dark {
+    /* Deep space dark mode */
+    --background: 230 30% 5%;
+    --foreground: 210 20% 92%;
+
+    --card: 230 25% 8%;
+    --card-foreground: 210 20% 92%;
+
+    --popover: 230 25% 8%;
+    --popover-foreground: 210 20% 92%;
+
+    --primary: 250 87% 65%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 230 20% 12%;
+    --secondary-foreground: 210 20% 80%;
+
+    --muted: 230 20% 12%;
+    --muted-foreground: 220 15% 50%;
+
+    --accent: 230 20% 16%;
+    --accent-foreground: 210 20% 92%;
+
+    --destructive: 0 63% 48%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 230 20% 14%;
+    --input: 230 20% 14%;
+    --ring: 250 87% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border box-border;
+  }
+
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.3);
+  }
+}
+
+/* ── Global Keyframes ─────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%       { opacity: 0.7; transform: scale(1.05); }
+}
+
+@keyframes shimmer {
+  from { background-position: -200% center; }
+  to   { background-position: 200% center; }
+}
+
+@keyframes mesh-drift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes border-spin {
+  from { --angle: 0deg; }
+  to   { --angle: 360deg; }
+}
+
+/* ── Utility Classes ─────────────────────────────────── */
+
+/* Animated gradient text */
+.text-gradient {
+  background: linear-gradient(
+    135deg,
+    hsl(250 87% 68%),
+    hsl(280 90% 72%),
+    hsl(200 100% 65%),
+    hsl(250 87% 68%)
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+/* Glassmorphism card */
+.glass {
+  background: hsl(var(--card) / 0.6);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid hsl(var(--border) / 0.6);
+}
+
+.glass-strong {
+  background: hsl(var(--card) / 0.8);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border: 1px solid hsl(var(--border) / 0.4);
+}
+
+/* Floating animation */
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
+
+/* Glow blob */
+.glow-blob {
+  animation: glow-pulse 4s ease-in-out infinite;
+}
+
+/* Gradient mesh animated background */
+.mesh-bg {
+  background: linear-gradient(
+    -45deg,
+    hsl(var(--background)),
+    hsl(250 50% 10%),
+    hsl(230 30% 7%),
+    hsl(260 40% 8%)
+  );
+  background-size: 400% 400%;
+  animation: mesh-drift 15s ease infinite;
+}
+
+/* Slide-up reveal with stagger support */
+.animate-slide-up {
+  animation: slide-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s ease both;
+}
+
+/* Noise texture overlay (subtle depth) */
+.noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Glowing button shadow */
+.btn-glow {
+  box-shadow: 0 0 20px hsl(var(--primary) / 0.4), 0 4px 12px hsl(var(--primary) / 0.2);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+.btn-glow:hover {
+  box-shadow: 0 0 35px hsl(var(--primary) / 0.5), 0 8px 24px hsl(var(--primary) / 0.3);
+  transform: translateY(-2px);
+}
+
+/* Gradient border card */
+.gradient-border {
+  position: relative;
+  border-radius: 1.5rem;
+}
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, hsl(var(--primary) / 0.5), transparent 50%, hsl(180 100% 50% / 0.2));
+  pointer-events: none;
+  z-index: 0;
+}
