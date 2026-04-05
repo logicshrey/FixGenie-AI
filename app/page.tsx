@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import {
   ArrowRight, Bot, Sparkles, Wrench, ShieldCheck, Zap,
-  CheckCircle2, TrendingUp, Clock, AlertTriangle, Sun, Moon,
+  CheckCircle2, TrendingUp, Clock, AlertTriangle, Sun, Moon, GraduationCap,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
