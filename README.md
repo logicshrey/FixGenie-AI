@@ -97,7 +97,13 @@ npm test
    - `NEXTAUTH_URL` (Vercel URL)
    - `NEXTAUTH_SECRET`
    - `GEMINI_API_KEY` or `OPENAI_API_KEY`
-4. Vercel will run `npm install`, `npx prisma migrate deploy`, and `npm run build` automatically.
+4. Set the Vercel build command to:
+
+```bash
+npx prisma generate && npx prisma migrate deploy && npm run build
+```
+
+5. Redeploy after saving the environment variables and build settings.
 
 ### Folder Structure
 

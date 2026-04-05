@@ -1,15 +1,21 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { auth } from '@/lib/auth';
-import { db } from '@/lib/db/client';
-import { chatWithFixBot } from '@/lib/ai/client';
 import { rateLimit } from '@/lib/rate-limit';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 const bodySchema = z.object({
   message: z.string().min(1).max(1500),
 });
 
 export async function POST(req: Request) {
+  const [{ auth }, { db }, { chatWithFixBot }] = await Promise.all([
+    import('@/lib/auth'),
+    import('@/lib/db/client'),
+    import('@/lib/ai/client'),
+  ]);
+
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
