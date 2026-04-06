@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/db/client';
+import { revalidateTicketWorkflow } from '@/lib/tickets/revalidate';
 
 const bodySchema = z.object({
   technicianId: z.string().cuid(),
@@ -39,6 +40,8 @@ export async function PATCH(req: Request, { params }: Params) {
       message: 'Ticket assigned to technician.',
     },
   });
+
+  revalidateTicketWorkflow(ticket.id);
 
   return NextResponse.json(ticket, { status: 200 });
 }

@@ -33,6 +33,9 @@ export default async function AdminTicketsPage({
       ...(priority ? { priority: { contains: priority, mode: 'insensitive' } } : {}),
     },
     orderBy: { createdAt: 'desc' },
+    include: {
+      assignedTo: { select: { name: true, email: true } },
+    },
   });
 
   return (
@@ -116,6 +119,10 @@ export default async function AdminTicketsPage({
                     </Link>
                     <p className="text-xs text-muted-foreground">
                       {t.category} · {t.priority} · {t.status}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {t.assignedTo?.name ?? t.assignedTo?.email ?? 'Unassigned'}
+                      {t.escalationFlag ? ' · Escalated' : ''}
                     </p>
                   </div>
                 </li>

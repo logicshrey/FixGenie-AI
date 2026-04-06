@@ -4,7 +4,7 @@ import { auth } from '@/lib/auth';
 import { db } from '@/lib/db/client';
 import { CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { SubmitButton } from '@/components/forms/submit-button';
 import { Wrench, User, Mail, Lock } from 'lucide-react';
 import Link from 'next/link';
 import { z } from 'zod';
@@ -119,12 +119,13 @@ export default async function RegisterPage({
                 className="h-11 rounded-xl border-border bg-muted/50 placeholder:text-muted-foreground/50 focus:border-primary/60 focus:ring-primary/20 transition-all"
               />
             </div>
-            <Button
+            <SubmitButton
               type="submit"
+              pendingLabel="Creating account..."
               className="mt-2 h-12 w-full rounded-xl bg-violet-600 text-base font-semibold text-white shadow-glow hover:bg-violet-500 hover:-translate-y-0.5 transition-all"
             >
               Create account
-            </Button>
+            </SubmitButton>
           </form>
 
           <div className="mt-6 text-center text-sm text-slate-400">

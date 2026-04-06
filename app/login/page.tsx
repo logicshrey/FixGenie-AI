@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { auth, signIn } from '@/lib/auth';
 import { CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { SubmitButton } from '@/components/forms/submit-button';
 import { Wrench, Lock, Mail } from 'lucide-react';
 import Link from 'next/link';
 
@@ -92,12 +92,13 @@ export default async function LoginPage({
                 className="h-11 rounded-xl border-border bg-muted/50 placeholder:text-muted-foreground/50 focus:border-primary/60 focus:ring-primary/20 transition-all"
               />
             </div>
-            <Button
+            <SubmitButton
               type="submit"
+              pendingLabel="Signing in..."
               className="mt-2 h-12 w-full rounded-xl text-base font-semibold shadow-glow hover:-translate-y-0.5 transition-all"
             >
               Sign in
-            </Button>
+            </SubmitButton>
           </form>
 
           <div className="mt-6 text-center text-sm text-muted-foreground">

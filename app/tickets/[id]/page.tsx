@@ -1,8 +1,10 @@
-import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import { notFound, redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/db/client';
+import { revalidateTicketWorkflow } from '@/lib/tickets/revalidate';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { SubmitButton } from '@/components/forms/submit-button';
 import { UserShell } from '@/components/app-shell/user-shell';
 import { TicketAttachmentPreview } from '@/components/tickets/ticket-attachment-preview';
 
@@ -13,7 +15,7 @@ interface Params {
 export default async function TicketDetailPage({
   params,
   searchParams,
-}: Params & { searchParams: { duplicate?: string } }) {
+}: Params & { searchParams: { duplicate?: string; created?: string; updated?: string } }) {
   const session = await auth();
   if (!session?.user) return null;
 
@@ -32,6 +34,9 @@ export default async function TicketDetailPage({
   const canClose =
     ticket.status === 'RESOLVED' &&
     ticket.createdById === (session.user.id as string);
+  const chatPrefill = encodeURIComponent(
+    `Help me troubleshoot ticket #${ticket.ticketId}: ${ticket.title}. Location: ${ticket.location}. Details: ${ticket.description}`,
+  );
 
   return (
     <UserShell active="tickets">
@@ -40,7 +45,23 @@ export default async function TicketDetailPage({
           <a className="text-sm text-primary underline-offset-2 hover:underline" href="/tickets">
             ← Back to tickets
           </a>
+          <Link
+            href={`/chat?prefill=${chatPrefill}`}
+            className="text-sm text-primary underline-offset-2 hover:underline"
+          >
+            Ask FixBot about this ticket
+          </Link>
         </div>
+        {searchParams.created && (
+          <div className="mb-4 rounded-md border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-700 dark:text-emerald-300">
+            Ticket created successfully. Your dashboards now reflect the new issue automatically.
+          </div>
+        )}
+        {searchParams.updated === 'closed' && (
+          <div className="mb-4 rounded-md border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-700 dark:text-emerald-300">
+            Ticket closed successfully.
+          </div>
+        )}
         {searchParams.duplicate && (
           <div className="mb-4 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-200">
             This looks similar to resolved Ticket #{searchParams.duplicate}. Review the AI fix steps below before scheduling.
@@ -119,11 +140,13 @@ export default async function TicketDetailPage({
                     message: 'Ticket closed by user.',
                   },
                 });
+                revalidateTicketWorkflow(ticket.id);
+                redirect(`/tickets/${ticket.id}?updated=closed`);
               }}
             >
-              <Button type="submit" size="sm">
+              <SubmitButton type="submit" size="sm" pendingLabel="Closing ticket...">
                 Close ticket
-              </Button>
+              </SubmitButton>
             </form>
           )}
           </CardContent>

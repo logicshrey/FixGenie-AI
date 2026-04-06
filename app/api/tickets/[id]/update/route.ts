@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/db/client';
+import { revalidateTicketWorkflow } from '@/lib/tickets/revalidate';
 
 const bodySchema = z.object({
   message: z.string().min(1).max(1000),
@@ -35,6 +36,8 @@ export async function POST(req: Request, { params }: Params) {
       message: parsed.data.message,
     },
   });
+
+  revalidateTicketWorkflow(ticket.id);
 
   return NextResponse.json(update, { status: 201 });
 }

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/db/client';
+import { revalidateTicketWorkflow } from '@/lib/tickets/revalidate';
 
 const bodySchema = z.object({
   status: z.enum(['OPEN', 'ASSIGNED', 'IN_PROGRESS', 'RESOLVED', 'CLOSED']),
@@ -77,6 +78,8 @@ export async function PATCH(req: Request, { params }: Params) {
       message: message ?? `Status changed to ${status}`,
     },
   });
+
+  revalidateTicketWorkflow(ticket.id);
 
   return NextResponse.json(updated, { status: 200 });
 }

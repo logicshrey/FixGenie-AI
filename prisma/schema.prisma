@@ -64,6 +64,9 @@ model Ticket {
   location                String
   category                String
   priority                String
+  reportedImpact          String?
+  urgencyReason           String?
+  escalationFlag          Boolean        @default(false)
   status                  TicketStatus   @default(OPEN)
   aiSummary               String
   aiKeywords              String[]

@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/db/client';
 import { analyzeTicketNlp } from '@/lib/ai/client';
+import { revalidateTicketWorkflow } from '@/lib/tickets/revalidate';
 import { findPotentialDuplicateTicket } from '@/services/tickets';
 
 const createTicketSchema = z.object({
@@ -10,6 +11,9 @@ const createTicketSchema = z.object({
   description: z.string().min(10).max(2000),
   imageDataUrl: z.string().max(3_000_000).optional(),
   location: z.string().min(2).max(255),
+  reportedImpact: z.string().max(160).optional(),
+  urgencyReason: z.string().max(300).optional(),
+  escalationFlag: z.boolean().optional(),
 });
 
 export async function POST(req: Request) {
@@ -23,7 +27,15 @@ export async function POST(req: Request) {
     if (!parsed.success) {
       return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
     }
-    const { title, description, imageDataUrl, location } = parsed.data;
+    const {
+      title,
+      description,
+      imageDataUrl,
+      location,
+      reportedImpact,
+      urgencyReason,
+      escalationFlag,
+    } = parsed.data;
 
     const nlp = await analyzeTicketNlp({ title, description, location });
 
@@ -35,6 +47,9 @@ export async function POST(req: Request) {
         location,
         category: nlp.category,
         priority: nlp.priority,
+        reportedImpact: reportedImpact?.trim() || null,
+        urgencyReason: urgencyReason?.trim() || null,
+        escalationFlag: escalationFlag ?? false,
         status: 'OPEN',
         aiSummary: nlp.summary,
         aiKeywords: nlp.keywords,
@@ -48,7 +63,10 @@ export async function POST(req: Request) {
     const duplicate = await findPotentialDuplicateTicket({
       description,
       category: nlp.category,
+      excludeTicketId: ticket.id,
     });
+
+    revalidateTicketWorkflow(ticket.id);
 
     return NextResponse.json({ ticket, duplicate }, { status: 201 });
   } catch (error) {

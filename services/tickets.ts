@@ -3,11 +3,15 @@ import { db } from '@/lib/db/client';
 export async function findPotentialDuplicateTicket(input: {
   description: string;
   category: string;
+  excludeTicketId?: string;
 }) {
   const recent = await db.ticket.findMany({
     where: {
       status: 'RESOLVED',
       category: input.category,
+      ...(input.excludeTicketId
+        ? { id: { not: input.excludeTicketId } }
+        : {}),
     },
     orderBy: { updatedAt: 'desc' },
     take: 15,
@@ -41,6 +45,7 @@ export async function findPotentialDuplicateTicket(input: {
 
   if (bestMatch && bestScore >= 0.35) {
     return {
+      id: bestMatch.id,
       ticketId: bestMatch.ticketId,
       title: bestMatch.title,
       summary: bestMatch.aiSummary,

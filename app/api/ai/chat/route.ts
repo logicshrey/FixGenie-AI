@@ -7,6 +7,15 @@ export const dynamic = 'force-dynamic';
 
 const bodySchema = z.object({
   message: z.string().min(1).max(1500),
+  history: z
+    .array(
+      z.object({
+        role: z.enum(['user', 'assistant']),
+        content: z.string().min(1).max(1500),
+      }),
+    )
+    .max(8)
+    .optional(),
 });
 
 export async function POST(req: Request) {
@@ -59,6 +68,7 @@ export async function POST(req: Request) {
     const answer = await chatWithFixBot({
       message: parsed.data.message,
       contextTickets,
+      history: parsed.data.history ?? [],
     });
 
     return NextResponse.json({ answer }, { status: 200 });
