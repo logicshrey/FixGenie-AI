@@ -8,6 +8,7 @@ const bodySchema = z.object({
   title: z.string().min(3).max(120).optional(),
   description: z.string().min(10).max(2000),
   imageName: z.string().max(255).optional(),
+  imageDataUrl: z.string().max(3_000_000).optional(),
   location: z.string().min(2).max(255),
 });
 

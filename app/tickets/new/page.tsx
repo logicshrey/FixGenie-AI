@@ -40,6 +40,7 @@ async function createTicket(formData: FormData) {
       description,
       location,
       imageName: imageFile?.name ?? null,
+      imageDataUrl,
     });
 
     const ticket = await db.ticket.create({
@@ -57,6 +58,7 @@ async function createTicket(formData: FormData) {
         aiSummary: nlp.summary,
         aiKeywords: nlp.keywords,
         aiFixSteps: nlp.fixSteps,
+        aiImageFault: nlp.imageFaultAssessment.trim() || null,
         technicianType: nlp.technicianType,
         predictedResolutionTime: nlp.predictedResolutionHours,
         createdById: session.user.id as string,
@@ -203,6 +205,10 @@ export default async function NewTicketPage({
                 </div>
               </div>
               <TicketImageInput />
+              <p className="text-xs text-muted-foreground">
+                Optional photo: Gemini analyzes the image to describe visible damage or equipment and
+                helps triage together with your text.
+              </p>
               <SubmitButton type="submit" pendingLabel="Creating ticket...">
                 Submit ticket
               </SubmitButton>

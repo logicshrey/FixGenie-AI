@@ -108,6 +108,14 @@ export default async function TicketDetailPage({
             )}
           </div>
           <TicketAttachmentPreview imageDataUrl={ticket.imageDataUrl} title={ticket.title} />
+          {ticket.aiImageFault && (
+            <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
+              <h2 className="mb-1 text-xs font-semibold uppercase text-muted-foreground">
+                Photo AI insight (Gemini vision)
+              </h2>
+              <p className="text-sm leading-relaxed">{ticket.aiImageFault}</p>
+            </div>
+          )}
           <div>
             <h2 className="mb-1 text-xs font-semibold uppercase text-muted-foreground">
               Timeline

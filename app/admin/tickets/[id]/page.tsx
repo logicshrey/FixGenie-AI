@@ -192,6 +192,14 @@ export default async function AdminTicketDetailPage({
                     ))}
                   </ul>
                 </div>
+                {ticket.aiImageFault && (
+                  <div className="rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-3">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                      Photo AI insight (Gemini vision)
+                    </p>
+                    <p className="mt-2 text-sm leading-relaxed">{ticket.aiImageFault}</p>
+                  </div>
+                )}
               </CardContent>
             </Card>
 

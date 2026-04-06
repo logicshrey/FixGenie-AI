@@ -71,6 +71,8 @@ model Ticket {
   aiSummary               String
   aiKeywords              String[]
   aiFixSteps              String[]
+  // Gemini vision: fault/damage hint from attached photo
+  aiImageFault            String?
   technicianType          String?
   predictedResolutionTime Int
   createdAt               DateTime       @default(now())

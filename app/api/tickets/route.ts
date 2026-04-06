@@ -37,7 +37,12 @@ export async function POST(req: Request) {
       escalationFlag,
     } = parsed.data;
 
-    const nlp = await analyzeTicketNlp({ title, description, location });
+    const nlp = await analyzeTicketNlp({
+      title,
+      description,
+      location,
+      imageDataUrl: imageDataUrl ?? null,
+    });
 
     const ticket = await db.ticket.create({
       data: {
@@ -54,6 +59,7 @@ export async function POST(req: Request) {
         aiSummary: nlp.summary,
         aiKeywords: nlp.keywords,
         aiFixSteps: nlp.fixSteps,
+        aiImageFault: nlp.imageFaultAssessment.trim() || null,
         technicianType: nlp.technicianType,
         predictedResolutionTime: nlp.predictedResolutionHours,
         createdById: session.user.id as string,

@@ -12,6 +12,7 @@ describe('ticketNlpSchema', () => {
       fixSteps: ['Shut off water', 'Call plumber'],
       technicianType: 'plumber',
       predictedResolutionHours: 4,
+      imageFaultAssessment: '',
     };
     const parsed = ticketNlpSchema.parse(data);
     expect(parsed.category).toBe('plumbing');

@@ -104,6 +104,14 @@ export default async function TechnicianTicketDetailPage({
               {ticket.status}
             </p>
             <TicketAttachmentPreview imageDataUrl={ticket.imageDataUrl} title={ticket.title} />
+            {ticket.aiImageFault && (
+              <div className="rounded-xl border border-primary/20 bg-primary/5 p-3 text-sm">
+                <p className="text-xs font-semibold uppercase text-muted-foreground">
+                  Photo AI insight
+                </p>
+                <p className="mt-1 leading-relaxed">{ticket.aiImageFault}</p>
+              </div>
+            )}
             <div className="flex flex-wrap gap-2">
               {['IN_PROGRESS', 'RESOLVED'].map((s) => (
                 <form

@@ -8,6 +8,8 @@ export const ticketNlpSchema = z.object({
   fixSteps: z.array(z.string()),
   technicianType: z.string(),
   predictedResolutionHours: z.number().int().nonnegative(),
+  /** What the photo shows: likely fault, damage, or component (Gemini vision). Empty if no image. */
+  imageFaultAssessment: z.string().default(''),
 });
 
 export type TicketNlp = z.infer<typeof ticketNlpSchema>;

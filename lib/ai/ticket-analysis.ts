@@ -5,6 +5,8 @@ export interface TicketAnalysisInput {
   description: string;
   location: string;
   imageName?: string | null;
+  /** data:image/...;base64,... for Gemini vision */
+  imageDataUrl?: string | null;
 }
 
 const CATEGORY_RULES = [
@@ -316,6 +318,7 @@ export function buildTicketAnalysisFallback(input: TicketAnalysisInput): TicketN
     fixSteps: categoryInfo.fixSteps,
     technicianType: categoryInfo.technicianType,
     predictedResolutionHours: estimateResolutionHours(categoryInfo.category, priority),
+    imageFaultAssessment: '',
   };
 }
 
@@ -333,6 +336,9 @@ export function mergeWithFallback(aiResult: TicketNlp, fallback: TicketNlp): Tic
     aiResult.priority === 'MEDIUM' &&
     fallback.priority !== 'MEDIUM' &&
     shouldUseFallbackCategory;
+
+  const imageFault =
+    (aiResult.imageFaultAssessment ?? '').trim() || fallback.imageFaultAssessment;
 
   return {
     ...aiResult,
@@ -355,5 +361,6 @@ export function mergeWithFallback(aiResult: TicketNlp, fallback: TicketNlp): Tic
       aiResult.predictedResolutionHours > 0 && !shouldUseFallbackCategory
         ? aiResult.predictedResolutionHours
         : fallback.predictedResolutionHours,
+    imageFaultAssessment: imageFault,
   };
 }
