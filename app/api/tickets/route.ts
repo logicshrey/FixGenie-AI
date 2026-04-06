@@ -6,7 +6,9 @@ import { analyzeTicketNlp } from '@/lib/ai/client';
 import { findPotentialDuplicateTicket } from '@/services/tickets';
 
 const createTicketSchema = z.object({
+  title: z.string().min(3).max(120).optional(),
   description: z.string().min(10).max(2000),
+  imageDataUrl: z.string().max(3_000_000).optional(),
   location: z.string().min(2).max(255),
 });
 
@@ -21,14 +23,15 @@ export async function POST(req: Request) {
     if (!parsed.success) {
       return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
     }
-    const { description, location } = parsed.data;
+    const { title, description, imageDataUrl, location } = parsed.data;
 
-    const nlp = await analyzeTicketNlp({ description, location });
+    const nlp = await analyzeTicketNlp({ title, description, location });
 
     const ticket = await db.ticket.create({
       data: {
-        title: nlp.summary.slice(0, 120),
+        title: title?.trim() || nlp.summary.slice(0, 120),
         description,
+        imageDataUrl,
         location,
         category: nlp.category,
         priority: nlp.priority,

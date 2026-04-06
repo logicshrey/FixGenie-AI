@@ -60,6 +60,7 @@ model Ticket {
   ticketId                Int            @default(autoincrement())
   title                   String
   description             String
+  imageDataUrl            String?
   location                String
   category                String
   priority                String

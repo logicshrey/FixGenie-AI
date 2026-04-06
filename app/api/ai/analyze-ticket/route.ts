@@ -5,7 +5,9 @@ import { ticketNlpSchema } from '@/lib/ai/schemas';
 import { rateLimit } from '@/lib/rate-limit';
 
 const bodySchema = z.object({
+  title: z.string().min(3).max(120).optional(),
   description: z.string().min(10).max(2000),
+  imageName: z.string().max(255).optional(),
   location: z.string().min(2).max(255),
 });
 

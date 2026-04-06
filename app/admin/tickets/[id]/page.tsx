@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth';
 import { db } from '@/lib/db/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AdminShell } from '@/components/app-shell/admin-shell';
+import { TicketAttachmentPreview } from '@/components/tickets/ticket-attachment-preview';
 
 interface Params {
   params: { id: string };
@@ -42,6 +43,7 @@ export default async function AdminTicketDetailPage({ params }: Params) {
               Category: {ticket.category} · Priority: {ticket.priority} · Status:{' '}
               {ticket.status}
             </p>
+            <TicketAttachmentPreview imageDataUrl={ticket.imageDataUrl} title={ticket.title} />
             <form
               action={async (formData) => {
                 'use server';

@@ -3,10 +3,12 @@ import { auth } from '@/lib/auth';
 import { db } from '@/lib/db/client';
 import { analyzeTicketNlp } from '@/lib/ai/client';
 import { findPotentialDuplicateTicket } from '@/services/tickets';
+import { fileToDataUrl } from '@/lib/tickets/image';
 import { UserShell } from '@/components/app-shell/user-shell';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { TicketImageInput } from '@/components/tickets/ticket-image-input';
 import { VoiceInputButton } from '@/components/voice-input-button';
 
 async function createTicket(formData: FormData) {
@@ -14,16 +16,28 @@ async function createTicket(formData: FormData) {
   const session = await auth();
   if (!session?.user) redirect('/login');
 
+  const title = String(formData.get('title') ?? '').trim();
   const description = String(formData.get('description') ?? '').trim();
   const location = String(formData.get('location') ?? '').trim();
-  if (description.length < 10 || location.length < 2) return;
+  const image = formData.get('image');
 
-  const nlp = await analyzeTicketNlp({ description, location });
+  if (title.length < 3 || description.length < 10 || location.length < 2) return;
+
+  const imageFile = image instanceof File ? image : null;
+  const imageDataUrl = imageFile ? await fileToDataUrl(imageFile) : null;
+
+  const nlp = await analyzeTicketNlp({
+    title,
+    description,
+    location,
+    imageName: imageFile?.name ?? null,
+  });
 
   const ticket = await db.ticket.create({
     data: {
-      title: nlp.summary.slice(0, 120),
+      title,
       description,
+      imageDataUrl,
       location,
       category: nlp.category,
       priority: nlp.priority,
@@ -68,6 +82,18 @@ export default async function NewTicketPage() {
           <CardContent>
             <form action={createTicket} className="space-y-4">
               <div className="space-y-2">
+                <label className="text-sm font-medium" htmlFor="title">
+                  Ticket title
+                </label>
+                <Input
+                  id="title"
+                  name="title"
+                  required
+                  maxLength={120}
+                  placeholder="e.g. AC leaking water in conference room"
+                />
+              </div>
+              <div className="space-y-2">
                 <label className="text-sm font-medium" htmlFor="location">
                   Location (building / floor / room)
                 </label>
@@ -88,6 +114,7 @@ export default async function NewTicketPage() {
                 </div>
                 <VoiceHint />
               </div>
+              <TicketImageInput />
               <Button type="submit">Submit ticket</Button>
             </form>
           </CardContent>

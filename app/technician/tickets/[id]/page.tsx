@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth';
 import { db } from '@/lib/db/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { TicketAttachmentPreview } from '@/components/tickets/ticket-attachment-preview';
 
 interface Params {
   params: { id: string };
@@ -82,6 +83,7 @@ export default async function TechnicianTicketDetailPage({ params }: Params) {
             Category: {ticket.category} · Priority: {ticket.priority} · Status:{' '}
             {ticket.status}
           </p>
+          <TicketAttachmentPreview imageDataUrl={ticket.imageDataUrl} title={ticket.title} />
           <div className="flex flex-wrap gap-2">
             {['IN_PROGRESS', 'RESOLVED'].map((s) => (
               <form

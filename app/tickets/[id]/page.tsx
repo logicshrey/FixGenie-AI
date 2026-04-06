@@ -4,6 +4,7 @@ import { db } from '@/lib/db/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { UserShell } from '@/components/app-shell/user-shell';
+import { TicketAttachmentPreview } from '@/components/tickets/ticket-attachment-preview';
 
 interface Params {
   params: { id: string };
@@ -85,6 +86,7 @@ export default async function TicketDetailPage({
               </ul>
             )}
           </div>
+          <TicketAttachmentPreview imageDataUrl={ticket.imageDataUrl} title={ticket.title} />
           <div>
             <h2 className="mb-1 text-xs font-semibold uppercase text-muted-foreground">
               Timeline
